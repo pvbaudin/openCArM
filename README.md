@@ -1,3 +1,4 @@
+![banner](.README-assets/banner.jpg)
 # openCArM: open-source camera array microscopy for biology
 
 ## Camera Module
