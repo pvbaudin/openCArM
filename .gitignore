@@ -1,0 +1,6 @@
+**/.DS_Store
+**/users.py
+**/*.db
+**/.env
+**/*.swp
+**/__pycache__/**
