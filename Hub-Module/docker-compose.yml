@@ -1,0 +1,45 @@
+################################################################################
+# Node-RED Stack or Compose
+################################################################################
+# docker stack deploy node-red --compose-file docker-compose-node-red.yml
+# docker-compose -f docker-compose-node-red.yml -p myNoderedProject up
+################################################################################
+version: "3.7"
+
+services:
+  node-red:
+    build: .
+    image: picroscope-hub-node-red:latest
+    environment:
+      - AWS_SHARED_CREDENTIALS_FILE=/home/pi/.aws/credentials
+    restart: always
+    ports:
+      - "1880:1880"
+    networks:
+      - node-red-net
+#    devices:
+#      - /dev/ttyACM0
+#   Devices mount works but causes container to fail startup if device is not plugged in, we want to be able to plug in devices after launch
+#   To accomplish this we will use a more unsafe method and give our container privileged access to the host system. 
+    privileged: true
+    volumes:
+      - ./data:/data
+      - ${CONFIG_PATH}:/boot  
+      - ./params:/home/pi/parameters
+      - ${SCRIPTS_PATH}:/home/pi/scripts
+      - ${CREDENTIALS_PATH}:/home/pi/.aws/credentials
+      - ${PICTURES_PATH}:/home/pi/Pictures
+      - ${ARCHIVE_PATH}:/home/pi/Pictures-archive 
+  MQTTbroker:
+    image: eclipse-mosquitto:1.6.13
+    restart: always
+    ports:
+      - "1883:1883"
+    networks:
+      - node-red-net
+
+#volumes:
+#  pictures-dir:
+
+networks:
+  node-red-net:
